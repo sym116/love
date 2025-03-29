@@ -1,0 +1,435 @@
+<!DOCTYPE html>                  
+<html>                  
+<head>
+    <title>给最爱的你</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 120px; /* 给底部按钮留出空间 */
+        }
+        
+        .heart {
+            position: fixed;
+            font-size: 20px;
+            animation: float 5s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        button {
+            background: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        #message {
+            font-size: 18px;
+            margin: 30px auto;
+            max-width: 600px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        #message::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #message::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+        
+        #message::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.5);
+            border-radius: 10px;
+        }
+        
+        #photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            margin: 20px auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        #name-input {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        #name-input input {
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 50px;
+            border: none;
+            margin: 10px;
+            width: 300px;
+            text-align: center;
+        }
+        
+        #name-input button {
+            background: #ff758c;
+            color: white;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .love-letter {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px auto;
+            backdrop-filter: blur(5px);
+            max-width: 600px;
+        }
+        
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: linear-gradient(to top, rgba(255, 117, 140, 0.9), transparent);
+            padding: 20px 0;
+        }
+        
+        .big-heart {
+            position: fixed;
+            font-size: 200px;
+            animation: pulse 2s infinite;
+            z-index: 10;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            display: none;
+        }
+        
+        .big-heart span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            color: white;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        
+        .sad-face {
+            position: fixed;
+            font-size: 200px;
+            z-index: 10;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            display: none;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        .fixed-button {
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes firework {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(3); opacity: 0.8; }
+            100% { transform: scale(5); opacity: 0; }
+        }
+        
+        /* 音乐控制按钮样式 */
+        #music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+    <meta http-equiv="Cache-Control" content="max-age=604800, public">                  
+</head>                  
+<body>
+    <!-- 添加音乐控制按钮 -->
+    <div id="music-control" title="音乐控制">♪</div>
+    
+    <!-- 添加音频元素 -->
+    <audio id="bg-music" autoplay loop>
+        <!-- 这里使用了免费可用的浪漫音乐链接，你可以替换为你自己的音乐 -->
+        <source src="music.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    <div id="name-input">
+        <h1>请输入他喜欢的那个她的名字</h1>
+        <input type="text" id="input-name" placeholder="请输入TA的名字" required>
+        <button onclick="verifyName()">确认</button>
+        <p id="error-message" style="color: #ffcc00; display: none;">你不是他喜欢的那个人</p>
+    </div>
+    
+    <div class="container">
+        <div id="content" class="hidden">
+            <div class="content-wrapper">
+                <img id="photo" src="image.jpg" alt="你的照片">
+                <h1>亲爱的 <span id="name">[名字]</span></h1>
+                
+                <div class="love-letter">
+                    <div id="message">
+                        <p>我想对你说一些心里话...</p>
+                        <p>我自己比较社恐还内向，我嘴笨怕正式见面会搞砸。我之前是不太相信网络的，当室友朋友在网络认识谈的非常好，我也开始有所改观；后来在直播间遇见你。</p>
+                        
+                        <p>我知道自己不高不帅而且家庭条件一般，没有太多奢望，这种想法自卑谈不上，可以说是有自知之明。</p>
+                        <p>直到遇见了你，你不但漂亮还活泼开朗直爽三观正；喜欢这个词不能说不好，但我觉得感觉更好。</p>
+                        
+                        <p>你的出现让我开始相信缘分，你的笑容总能让我忘记烦恼，让我非常开心。</p>
+                        <p>和你聊天的时候，看到你开心，我也会不由自主地笑起来。</p>
+                        
+                        
+                        <p>我不知道未来会怎样，但我知道此刻，我想和你一起拥有我们美好的回忆。</p>
+                        <p>不知道你愿不愿意给我个机会和我在一起，做我女朋友？</p>
+                        
+                        <p style="text-align: center; font-size: 24px; margin-top: 30px;">你愿意成为我的女朋友吗?</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="buttons-container">
+                <button id="accept-btn" class="fixed-button" onclick="accept()">我愿意 💖</button>
+                <button id="think-btn" class="fixed-button" onclick="think()">我再想想</button>
+            </div>
+            
+            <div class="big-heart" id="big-heart">❤️<span>爱你哟</span></div>
+            <div class="sad-face" id="sad-face">😔</div>
+        </div>
+    </div>
+    
+    <script>
+        // 正确名字设置（可以修改为你想要的名字）
+        const correctName = "李梦璐";
+        
+        // 页面加载完成后尝试播放音乐
+        document.addEventListener('DOMContentLoaded', function() {
+            const music = document.getElementById('bg-music');
+            const musicControl = document.getElementById('music-control');
+            
+            // 尝试自动播放音乐（可能会被浏览器阻止）
+            const playPromise = music.play();
+            
+            // 如果自动播放被阻止
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    // 显示音乐控制按钮，让用户手动播放
+                    musicControl.style.display = 'flex';
+                });
+            }
+            
+            // 音乐控制按钮点击事件
+            musicControl.addEventListener('click', function() {
+                if (music.paused) {
+                    
+                    music.play();
+                    musicControl.innerHTML = '♪';
+                    musicControl.title = '暂停音乐';
+                } else {
+                    music.pause();
+                    musicControl.innerHTML = '🔇';
+                    musicControl.title = '播放音乐';
+                }
+            });
+        });
+
+        
+
+        // 验证名字
+        function verifyName() {
+            const inputName = document.getElementById('input-name').value.trim();
+            const errorMessage = document.getElementById('error-message');
+            
+            if (inputName === correctName) {
+                const music = document.getElementById('bg-music');
+                const musicControl = document.getElementById('music-control');
+                music.play();
+                musicControl.innerHTML = '♪';
+                musicControl.title = '暂停音乐';
+                document.getElementById('name-input').classList.add('hidden');
+                document.getElementById('content').classList.remove('hidden');
+                document.getElementById('name').textContent = inputName;
+                
+                // 开始动画
+                setInterval(createHearts, 300);
+            } else {
+                errorMessage.style.display = 'block';
+                document.getElementById('input-name').value = '';
+                document.getElementById('input-name').focus();
+            }
+        }
+        
+        // 创建漂浮的心形
+        function createHearts() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+        
+        // 接受按钮
+        function accept() {
+            const name = document.getElementById('name').textContent;
+            document.getElementById('message').innerHTML = `
+                <h2 style="text-align: center;">太棒了! ${name}, 我保证:</h2>
+                <p>🤗 理解并包容你的所有</p>
+                <p>🌈 让每一天都开心快乐</p>
+                
+                <p style="text-align: center; font-size: 24px; margin-top: 30px;">我喜欢你，希望永远在一起!</p>
+            `;
+            
+            // 显示大爱心
+            const bigHeart = document.getElementById('big-heart');
+            bigHeart.style.display = 'block';
+            
+            // 隐藏按钮
+            document.getElementById('accept-btn').style.display = 'none';
+            document.getElementById('think-btn').style.display = 'none';
+            
+            // 增加更多心形
+            setInterval(createHearts, 100);
+            
+            // 添加烟花效果
+            createFireworks();
+        }
+        
+        // 再想想按钮
+        function think() {
+            const name = document.getElementById('name').textContent;
+            document.getElementById('message').innerHTML = `
+                <p>${name}，我知道这可能是个重要的决定。</p>
+                <p>我愿意等待，因为你是值得我等待的人。</p>
+                
+                <p style="text-align: center; font-size: 24px; margin-top: 30px;">我会一直在这里，等你准备好。</p>
+            `;
+            
+            // 显示难过表情
+            const sadFace = document.getElementById('sad-face');
+            sadFace.style.display = 'block';
+            
+            // 隐藏按钮
+            document.getElementById('accept-btn').style.display = 'none';
+            document.getElementById('think-btn').style.display = 'none';
+            
+            // 3秒后显示"我考虑好了"按钮
+            setTimeout(() => {
+                const buttonsContainer = document.querySelector('.buttons-container');
+                buttonsContainer.innerHTML = `
+                    <button onclick="accept()" class="fixed-button" style="background: #ff758c; color: white;">
+                        我考虑好了，我愿意 💖
+                    </button>
+                `;
+                sadFace.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 烟花效果
+        function createFireworks() {
+            const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.style.position = 'fixed';
+                    firework.style.left = Math.random() * 100 + 'vw';
+                    firework.style.top = Math.random() * 100 + 'vh';
+                    firework.style.width = '5px';
+                    firework.style.height = '5px';
+                    firework.style.borderRadius = '50%';
+                    firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.boxShadow = `0 0 10px 2px ${colors[Math.floor(Math.random() * colors.length)]}`;
+                    firework.style.animation = `firework 1s ease-out forwards`;
+                    
+                    document.body.appendChild(firework);
+                    
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 1000);
+                }, i * 100);
+            }
+        }
+    </script>                  
+</body>               
+</html>
